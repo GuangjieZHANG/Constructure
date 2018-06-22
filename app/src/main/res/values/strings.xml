@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Constructure</string>
+    <string name="app_name_zh">联技</string>
+    <string name="worker">工人</string>
+    <string name="team">工队</string>
+    <string name="login">登录</string>
+    <string name="registre">注册</string>
+</resources>
