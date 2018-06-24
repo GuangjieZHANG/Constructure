@@ -7,6 +7,10 @@ public class Project {
     private String name;
     private Bitmap picture;
 
+    public Project(String name) {
+        this.name = name;
+    }
+
     public Project(String name, Bitmap picture) {
         this.name = name;
         this.picture = picture;

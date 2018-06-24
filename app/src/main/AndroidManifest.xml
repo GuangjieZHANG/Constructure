@@ -16,17 +16,19 @@
         <activity android:name=".LoginTeamActivity"/>
         <activity android:name=".RegistreWorkerActivity"/>
         <activity android:name=".RegistreTeamActivity"/>
-        <activity android:name=".TeamActivity"/>
-        <activity android:name=".WorkerActivity"/>
+        <activity android:name=".TeamActivity">
+        </activity>
+        <activity android:name=".WorkerActivity">
+        </activity>
         <activity android:name=".SearchWorkerActivity">
+        </activity>
+        <activity android:name=".InfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UpdateInfoActivity"/>
-        <activity android:name=".InfoActivity"/>
     </application>
 
 </manifest>

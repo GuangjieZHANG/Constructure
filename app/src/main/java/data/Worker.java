@@ -17,6 +17,9 @@ public class Worker {
     private ArrayList<Project> ex_projects;
     private ArrayList<Team> ex_teams;
 
+    public Worker() {
+    }
+
     //每个工人的详细页面
     public Worker(String name, String speciality, Bitmap picture, ArrayList<Worker> matched_workers, ArrayList<Project> ex_projects, ArrayList<Team> ex_teams) {
         this.name = name;
@@ -28,8 +31,15 @@ public class Worker {
     }
 
     //队友的构造
+    public Worker(int id, String name, String speciality, int cci, String note) {
+        this.id = id;
+        this.name = name;
+        this.speciality = speciality;
+        this.cci = cci;
+        this.note = note;
+    }
 
-
+    //队友的构造
     public Worker(int id, String name, String speciality, Bitmap picture, int cci, String note) {
         this.id = id;
         this.name = name;

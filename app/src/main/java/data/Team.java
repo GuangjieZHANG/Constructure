@@ -8,14 +8,17 @@ public class Team {
     private String name;
     private String labor_companys;
     private ArrayList<Project> ex_projects;
-    private ArrayList<Worker> current_workers;
+    private ArrayList<CurrentWorker> current_workers;
+
+    public Team() {
+    }
 
     public Team(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Team(String name, String labor_companys, ArrayList<Project> ex_projects, ArrayList<Worker> current_workers) {
+    public Team(String name, String labor_companys, ArrayList<Project> ex_projects, ArrayList<CurrentWorker> current_workers) {
         this.name = name;
         this.labor_companys = labor_companys;
         this.ex_projects = ex_projects;
@@ -54,11 +57,11 @@ public class Team {
         this.ex_projects = ex_projects;
     }
 
-    public ArrayList<Worker> getCurrent_workers() {
+    public ArrayList<CurrentWorker> getCurrent_workers() {
         return current_workers;
     }
 
-    public void setCurrent_workers(ArrayList<Worker> current_workers) {
+    public void setCurrent_workers(ArrayList<CurrentWorker> current_workers) {
         this.current_workers = current_workers;
     }
 

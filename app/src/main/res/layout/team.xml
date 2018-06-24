@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,5 +17,79 @@
             android:text="联技 Constructure"
             android:layout_marginLeft="65dp"/>
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="历史工程:"
+        android:textSize="20sp"
+        android:textColor="@color/orange"
+        android:layout_marginTop="10dp"/>
+
+    <views.HorizontalListView
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/ex_projects_team"></views.HorizontalListView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:orientation="vertical">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                app:riv_border_color="@color/orange"
+                app:riv_border_width="4dp"
+                app:riv_corner_radius="10dp"
+                app:riv_mutate_background="true"
+                app:riv_oval="true"
+                android:background="@drawable/images"
+                android:id="@+id/team_image"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工队名字"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:id="@+id/team_name"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/round_orange"
+            android:layout_marginTop="60dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="劳务公司"
+                android:layout_marginLeft="8dp"
+                android:id="@+id/team_labor"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="团队组成 :"
+        android:textSize="20sp"
+        android:textColor="@color/orange"/>
+    <views.HorizontalListView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/current_worker_team"></views.HorizontalListView>
 
 </LinearLayout>
