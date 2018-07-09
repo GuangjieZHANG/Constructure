@@ -1,16 +1,38 @@
 package com.example.constructure;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Map;
+
+import data.CurrentWorker;
 import data.Project;
 import data.Team;
 import data.Worker;
+import views.CurrentWorkerAdapter;
 import views.HorizontalListView;
 import views.ProjectAdapter;
 import views.TeamAdapter;
@@ -25,87 +47,141 @@ public class WorkerActivity extends Activity {
     private HorizontalListView workers_connected;
     private HorizontalListView ex_projects;
     private HorizontalListView ex_teams;
+    private int workerId;
+    private  ProjectAdapter projectAdapter;
+    private TeamAdapter teamAdapter;
+    private WorkerConnectedAdapter workerConnectedAdapter;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.worker);
+        Intent intent=this.getIntent();
+        //workerId=3;
+        String t =intent.getStringExtra("worker");
+        System.out.println("======"+t);
+        workerId =  Integer.parseInt(t);
 
         worker_image = (ImageView)findViewById(R.id.worker_image);
         worker_name = (TextView)findViewById(R.id.worker_name);
         worker_speciality = (TextView)findViewById(R.id.worker_speciality);
-        worker_cci = (TextView)findViewById(R.id.worker_cci);
 
         workers_connected = (HorizontalListView)findViewById(R.id.worker_connected);
         ex_projects = (HorizontalListView)findViewById(R.id.ex_projects_worker);
         ex_teams = (HorizontalListView)findViewById(R.id.ex_teams_worker);
 
-        Worker worker = getData();
-        worker_name.setText(worker.getName());
-        worker_speciality.setText(worker.getSpeciality());
-        worker_cci.setText("合拍度："+worker.getCci());
+        getData();
 
-        ProjectAdapter projectAdapter = new ProjectAdapter(WorkerActivity.this,R.layout.project_item,worker.getEx_projects());
-        ex_projects.setAdapter(projectAdapter);
+        ex_teams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Team p = (Team) teamAdapter.getItem(position);
+                Intent intent = new Intent(WorkerActivity.this,TeamActivity.class);
+                intent.putExtra("team_id",p.getId()+"");
+                System.out.println("======"+p.getId());
+                startActivity(intent);
+            }
+        });
 
-        WorkerConnectedAdapter workerConnectedAdapter = new WorkerConnectedAdapter(WorkerActivity.this,R.layout.worker_connected_item,worker.getMatched_workers());
-        workers_connected.setAdapter(workerConnectedAdapter);
-
-
-        TeamAdapter teamAdapter = new TeamAdapter(WorkerActivity.this,R.layout.team_item,worker.getEx_teams());
-        ex_teams.setAdapter(teamAdapter);
-
+        workers_connected.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Worker w = (Worker)workerConnectedAdapter.getItem(position);
+                Intent i = new Intent(WorkerActivity.this,WorkerActivity.class);
+                i.putExtra("worker",w.getId()+"");
+                System.out.println("======"+w.getId());
+                startActivity(i);
+            }
+        });
 
     }
 
-    private Worker getData(){
-        Worker worker = new Worker();
-        worker.setName("吴伟杰");
-        worker.setSpeciality("木工");
-        worker.setCci(87);
-        ArrayList<Project> projects = new ArrayList<>();
-        ArrayList<Worker> workerConnected = new ArrayList<>();
-        ArrayList<Team> teams = new ArrayList<>();
+    private void getData(){
+        final Worker worker = new Worker();
+        final ArrayList<Project> projects = new ArrayList<>();
+        final ArrayList<Worker> workerConnected = new ArrayList<>();
+        final ArrayList<Team> teams = new ArrayList<>();
+        String baseUrl = "http://34.226.141.56:8000/user/worker_match/?worker_id="+workerId;
+        OkHttpClient okHttpClient=new OkHttpClient();
+        final Request request=new Request.Builder().url(baseUrl).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
 
-        Worker w1 = new Worker(01,"王全有","木工",78,"搭档");
-        Worker w2 = new Worker(02,"张三","建筑工",58,"丛属");
-        Worker w3 = new Worker(03,"李四","油漆工",43,"搭档");
-        Worker w4 = new Worker(04,"王五","瓦工",70,"上级");
-        workerConnected.add(w1);
-        workerConnected.add(w2);
-        workerConnected.add(w3);
-        workerConnected.add(w4);
-        worker.setMatched_workers(workerConnected);
+            }
 
-        Team t1 = new Team(01,"红队");
-        Team t2 = new Team(02,"橙队");
-        Team t3 = new Team(03,"黄队");
-        Team t4 = new Team(04,"绿队");
-        Team t5 = new Team(05,"青队");
-        Team t6 = new Team(06,"全队");
-        teams.add(t1);
-        teams.add(t2);
-        teams.add(t3);
-        teams.add(t4);
-        teams.add(t5);
-        teams.add(t6);
-        worker.setEx_teams(teams);
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String res=response.body().string();
+                //{"picture": "alsdfkjadslfj", "name": "\u897f\u5b89\u8d5a\u94b1\u6709\u9650\u516c\u53f8", "matched_workers": [], "specialty": "\u6728\u5de5", "ex_projects": [{"picture": "alsdfkjadslfj", "name": "\u4e07\u79d1\u57ce\u4e00\u671f"}], "ex_teams": [{"team_id": 3, "name": "\u897f\u5b89\u8d5a\u94b1\u6709\u9650\u516c\u53f8"}]}
+                Log.i("worker",res);
+                try{
+                    JSONObject thisworker = new JSONObject(res);
+                    String picture = thisworker.getString("picture");
+                    String name = thisworker.getString("name");
+                    String speciality = thisworker.getString("specialty");
+                    JSONArray matchedWork = thisworker.getJSONArray("matched_workers");
+                    JSONArray ex_projects = thisworker.getJSONArray("ex_projects");
+                    JSONArray ex_team = thisworker.getJSONArray("ex_teams");
+                    worker.setName(name);
+                    for(int i = 0;i<matchedWork.length();i++){
+                        JSONObject worker = matchedWork.getJSONObject(i);
+                        String note = worker.getString("note");
+                        String spe = worker.getString("specialty");
+                        String namePat = worker.getString("name");
+                        int id = worker.getInt("worker_id");
+                        Worker w = new Worker();
+                        w.setName(namePat);
+                        w.setSpeciality(spe);
+                        w.setNote(note);
+                        w.setId(id);
+                        workerConnected.add(w);
+                    }
+                    for(int j = 0;j<ex_projects.length();j++){
+                        JSONObject project = ex_projects.getJSONObject(j);
+                        String pic = project.getString("picture");
+                        String namePro = project.getString("name");
+                        Project p = new Project(namePro);
+                        projects.add(p);
+                    }
+                    for(int k = 0;k<ex_team.length();k++){
+                        JSONObject ex_teams = ex_team.getJSONObject(k);
+                        int i = ex_teams.getInt("team_id");
+                        String namePro = ex_teams.getString("name");
+                        Team t = new Team(i,namePro);
+                        teams.add(t);
+                    }
+
+                    worker.setMatched_workers(workerConnected);
+                    worker.setEx_projects(projects);
+                    worker.setEx_teams(teams);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        worker_name.setText(worker.getName());
+                        worker_speciality.setText(worker.getSpeciality());
+
+                        projectAdapter = new ProjectAdapter(WorkerActivity.this,R.layout.project_item,worker.getEx_projects());
+                        ex_projects.setAdapter(projectAdapter);
+
+                        workerConnectedAdapter = new WorkerConnectedAdapter(WorkerActivity.this,R.layout.worker_connected_item,worker.getMatched_workers());
+                        workers_connected.setAdapter(workerConnectedAdapter);
 
 
-        Project p1 = new Project("明珠");
-        Project p2 = new Project("和谐城");
-        Project p3 = new Project("世纪嘉园");
-        Project p4 = new Project("博物馆");
-        Project p5 = new Project("世博园");
-        projects.add(p1);
-        projects.add(p2);
-        projects.add(p3);
-        projects.add(p4);
-        projects.add(p5);
-        worker.setEx_projects(projects);
+                        teamAdapter = new TeamAdapter(WorkerActivity.this,R.layout.team_item,worker.getEx_teams());
+                        ex_teams.setAdapter(teamAdapter);
 
-        return worker;
+                    }
+                });
+
+            }
+        });
+
     }
 
 }

@@ -38,14 +38,14 @@
         app:riv_corner_radius="10dp"
         app:riv_mutate_background="true"
         app:riv_oval="true"
-        android:background="@drawable/images"
+        android:background="@drawable/image"
         android:id="@+id/login_worker_image"
         />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="您的姓名"
+        android:hint="您的身份证号"
         android:singleLine="true"
         android:layout_marginLeft="80dp"
         android:layout_marginRight="80dp"

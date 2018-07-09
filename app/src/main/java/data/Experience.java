@@ -11,6 +11,13 @@ public class Experience {
     public Experience() {
     }
 
+    public Experience(String team, String project, String start, String end) {
+        this.team = team;
+        this.project = project;
+        this.start = start;
+        this.end = end;
+    }
+
     public Experience(int workerId, String team, String project, String start, String end) {
         this.workerId = workerId;
         this.team = team;
@@ -57,5 +64,16 @@ public class Experience {
 
     public void setEnd(String end) {
         this.end = end;
+    }
+
+    @Override
+    public String toString() {
+        return "Experience{" +
+                "workerId=" + workerId +
+                ", team='" + team + '\'' +
+                ", project='" + project + '\'' +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
+                '}';
     }
 }

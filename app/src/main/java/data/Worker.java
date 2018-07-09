@@ -12,6 +12,7 @@ public class Worker {
     private Bitmap picture;
     private int cci;//匹配程度  查询需要
     private String note;
+    private String hometown;
 
     private ArrayList<Worker> matched_workers;
     private ArrayList<Project> ex_projects;
@@ -95,6 +96,14 @@ public class Worker {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getHometown() {
+        return hometown;
+    }
+
+    public void setHometown(String hometown) {
+        this.hometown = hometown;
     }
 
     public ArrayList<Worker> getMatched_workers() {

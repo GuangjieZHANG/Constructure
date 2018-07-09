@@ -32,7 +32,7 @@
             app:riv_corner_radius="10dp"
             app:riv_mutate_background="true"
             app:riv_oval="true"
-            android:background="@drawable/images"
+            android:background="@drawable/image"
             android:id="@+id/worker_image"
             />
         <LinearLayout
@@ -73,14 +73,6 @@
                     android:text="spécialité:"
                     android:layout_marginLeft="10dp"
                     android:id="@+id/worker_speciality"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="cci"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/worker_cci"
-                    />
 
             </LinearLayout>
 
@@ -97,7 +89,7 @@
 
     <views.HorizontalListView
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="145dp"
     android:layout_alignParentTop="true"
     android:id="@+id/worker_connected">
 

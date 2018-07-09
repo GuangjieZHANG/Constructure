@@ -46,6 +46,7 @@
             android:layout_gravity="center_vertical"
             android:id="@+id/info"/>
 
+
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"

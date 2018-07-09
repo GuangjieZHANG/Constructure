@@ -16,6 +16,6 @@
         android:textColor="@color/white"
         android:text="上海舜杰"
         android:id="@+id/team_item_name"
-        android:layout_marginLeft="8dp"/>
+        android:layout_marginLeft="4dp"/>
 </LinearLayout>
 </LinearLayout>

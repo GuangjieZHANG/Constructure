@@ -37,7 +37,7 @@
         app:riv_corner_radius="10dp"
         app:riv_mutate_background="true"
         app:riv_oval="true"
-        android:background="@drawable/images"
+        android:background="@drawable/image"
         android:id="@+id/registre_team_image"
         />
 

@@ -10,13 +10,36 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.util.Map;
 
 public class RegistreWorkerActivity extends Activity {
 
@@ -24,6 +47,7 @@ public class RegistreWorkerActivity extends Activity {
     private EditText id_in;
     private EditText type_in;
     private EditText psw_in;
+    private EditText home_in;
     private Button registre;
     private ImageView image;
 
@@ -31,10 +55,12 @@ public class RegistreWorkerActivity extends Activity {
     protected static final int TAKE_PICTURE = 1;
     protected static Uri tempUri;
     private static final int CROP_SMALL_PICTURE = 2;
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private Bitmap mBitmap;
 
-    private String name,id,type,psw;
+    private String name,id,type,psw,home;
+    private Bitmap pic;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,18 +72,61 @@ public class RegistreWorkerActivity extends Activity {
         type_in = (EditText)findViewById(R.id.registre_worker_type);
         psw_in = (EditText)findViewById(R.id.registre_worker_psw);
         image = (ImageView)findViewById(R.id.registre_worker_image);
+        home_in = (EditText)findViewById(R.id.registre_worker_hometown);
 
         registre = (Button)findViewById(R.id.registre_worker);
-
-        name = name_in.getText().toString();
-        id = id_in.getText().toString();
-        type = type_in.getText().toString();
-        psw = psw_in.getText().toString();
 
         registre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                name = name_in.getText().toString();
+                id = id_in.getText().toString();
+                type = type_in.getText().toString();
+                psw = psw_in.getText().toString();
+                pic = image.getDrawingCache();
+                home = home_in.getText().toString();
+                OkHttpClient okHttpClient = new OkHttpClient();
+                okHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+                String baseUrl = "http://34.226.141.56:8000/user/worker/";
+                FormEncodingBuilder requestBodyBuilder = new FormEncodingBuilder();
 
+                RequestBody requestBody = RequestBody.create(JSON,toJson(name,id,type,psw,home,"testtesttest"));
+                Request.Builder builder = new Request.Builder();
+                Request request = builder.url(baseUrl).post(requestBody).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        //输出出错信息
+                        Log.i("onFailure:",e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        final String res=response.body().string();
+                        Log.i("zhuce", res);
+                        try{
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+                            Map<String, Object> sList = gson.fromJson(res, type);
+                            final String result= sList.get("msg").toString();
+                            Log.i("res",result);
+                            if(result.equals("success")){
+                                final String worker_id = sList.get("worker_id").toString();
+                                Intent intent = new Intent(RegistreWorkerActivity.this,LoginWorkerActivity.class);
+                                startActivity(intent);
+                                RegistreWorkerActivity.this.finish();
+                            }else{
+                                toast("注册发生错误");
+                            }
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            toast("服务器返回错误");
+                        }
+                    }
+                });
             }
         });
 
@@ -156,5 +225,38 @@ public class RegistreWorkerActivity extends Activity {
             //在这个地方可以写上上传该图片到服务器的代码
         }
     }
+    private void toast(final String str) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(RegistreWorkerActivity.this, str, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
+    private String hearImage(Bitmap bitmap){
+        String toreturn;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,baos);
+        toreturn = Base64.encodeToString(baos.toByteArray(),Base64.DEFAULT);
+        return toreturn;
+    }
+
+    public String toJson(String name,String idcard,String speciality,String password,String hometown,String picture){
+        String jsonResult = "";
+        try{
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("name",name);
+            jsonObj.put("idcard",idcard);
+            jsonObj.put("specialty",speciality);
+            jsonObj.put("password",password);
+            jsonObj.put("hometown",hometown);
+            jsonObj.put("picture",picture);
+            jsonResult = jsonObj.toString();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        Log.i("Json:",jsonResult);
+        return jsonResult;
+    }
 }

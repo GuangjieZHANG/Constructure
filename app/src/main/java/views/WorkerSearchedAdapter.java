@@ -48,7 +48,7 @@ public class WorkerSearchedAdapter extends ArrayAdapter {
             viewHolder.certified.setImageResource(R.drawable.certified);
             viewHolder.cci.setText(workerSearched.getCci()+"%");
         }else {
-            viewHolder.info.setText(workerSearched.getName()+";"+workerSearched.getHometown());
+            viewHolder.info.setText(workerSearched.getName()+";"+workerSearched.getHometown()+";"+workerSearched.getNotes());
             viewHolder.cci.setText(workerSearched.getCci()+"%");
             viewHolder.certified.setImageResource(R.drawable.non_certified);
         }

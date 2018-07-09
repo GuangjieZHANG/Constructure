@@ -7,6 +7,7 @@ public class WorkerSearched {
     private String hometown;
     private int cci;//匹配程度  查询需要
     private boolean certified;
+    private String notes;
 
     public WorkerSearched() {
     }
@@ -37,6 +38,14 @@ public class WorkerSearched {
 
     public String getHometown() {
         return hometown;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public void setHometown(String hometown) {
